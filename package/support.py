@@ -74,6 +74,19 @@ def load_pro(
         Geopandas dataframe.
     """
 
+    if cloud:
+        conn_str = data_config['conn_str']
+        gdf = load_cloud_data(conn_str)
+    else:
+        gdf = load_local_data(
+            work_dir,
+            data_config['data_year'],
+            data_config['data_topic'],
+            data_config['geo_area'],
+            data_config['gda_spec'],
+            data_config['gda_type']
+        )
+
     return gdf
 
 def process_data(
@@ -251,7 +264,7 @@ def read_figure(
 
     # Load figure
     figure = pio.read_json(
-        f"{work_dir}/figure/{filename}.json",
+        f"{work_dir}/fig/{filename}.json",
     )
 
     return figure
@@ -304,12 +317,12 @@ def save_figure(
     if file_type == 'html':
         pio.write_html(
             figure,
-            f"{work_dir}/figure/{filename}.html"
+            f"{work_dir}/fig/{filename}.html"
         )
     elif file_type == 'json':
         pio.write_json(
             figure,
-            f"{work_dir}/figure/{filename}.json",
+            f"{work_dir}/fig/{filename}.json",
         )
 
     return None
